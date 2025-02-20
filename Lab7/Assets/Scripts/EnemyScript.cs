@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
+    public Transform player;
+    private Transform enemy;
+
     void OnTriggerEnter(Collider other)
     {
-        if(other.name == "Player");
+        if(other.gameObject.name == "Player");
         {
-            Debug.Log("Playerdetected - attack!");
+            Debug.Log("Player detected - attack!");
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if(other.name == "Player")
+        if(other.gameObject.name == "Player")
         {
             Debug.Log("Player out of range, resume patrol");
         }
@@ -23,12 +26,13 @@ public class EnemyScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        enemy = GetComponent<Transform>();
     }
 
-    // Update is called once per frame
-    void Update()
+    
+    void FixedUpdate()
     {
-        
+        Vector3 directionToPlayer = player.position - enemy.transform.position;
+        enemy.transform.Translate(directionToPlayer.normalized * Time.deltaTime);
     }
 }

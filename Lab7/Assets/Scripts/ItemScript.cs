@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class ItemScript : MonoBehaviour
 {
+    void OnTriggerEnter(Collider collision)
+    {
+        //if(collision.gameObject.name == "Player")
+        //{
+            Destroy(gameObject);
+            Debug.Log("Item collected!");
+        //}
+    }
+
     // Start is called before the first frame update
     void Start()
     {
