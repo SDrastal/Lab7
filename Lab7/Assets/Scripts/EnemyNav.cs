@@ -9,6 +9,7 @@ public class EnemyNav : MonoBehaviour
     private Transform[] locations;
     private int currentLocation = 0;
     private bool chasingPlayer = false;
+    private float speed = 5f;
 
     void Start()
     {
@@ -26,9 +27,8 @@ public class EnemyNav : MonoBehaviour
         if (!chasingPlayer && (transform.position - player.position).magnitude < 5)
         {
             chasingPlayer = true;
-            Vector3 lookAt = player.position;
-            lookAt.y = transform.position.y;
-            transform.LookAt(lookAt);
+            Debug.Log("Chasing Player!");
+            Vector3.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
         }
         else
         {
@@ -49,6 +49,28 @@ public class EnemyNav : MonoBehaviour
         for (int i = 0; i < patrolRoute.childCount; i++)
         {
             locations[i] = patrolRoute.GetChild(i);
+        }
+    }
+
+    // Detect when player enters enemy's range
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "Player")
+        {
+            Debug.Log("Player detected - start chasing!");
+            chasingPlayer = true;
+            agent.SetDestination(player.position);
+        }
+    }
+    
+    // Detect when player leaves enemy's range
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.name == "Player")
+        {
+            Debug.Log("Player out of range - resume patrol.");
+            chasingPlayer = false;
+            MoveToNextPatrolLocation();
         }
     }
 }
